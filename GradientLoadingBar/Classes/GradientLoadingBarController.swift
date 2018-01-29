@@ -122,17 +122,20 @@ open class GradientLoadingBarController {
         guard let superview = superview else { return }
 
         let superViewTopAnchor: NSLayoutYAxisAnchor
+        var constant = UIApplication.shared.statusBarFrame.height
         if #available(iOS 11.0, *) {
-            // Handle iPhone X Layout, so gradient view is underneath the status bar
+            // Handle iPhone X Layout
             superViewTopAnchor = superview.safeAreaLayoutGuide.topAnchor
+            if superview.safeAreaInsets.top > 0 {
+                constant = 0
+            }
         } else {
             superViewTopAnchor = superview.topAnchor
         }
 
         NSLayoutConstraint.activate([
-            gradientView.topAnchor.constraint(equalTo: superViewTopAnchor),
+            gradientView.topAnchor.constraint(equalTo: superViewTopAnchor, constant: constant),
             gradientView.heightAnchor.constraint(equalToConstant: CGFloat(height)),
-
             gradientView.leadingAnchor.constraint(equalTo: superview.leadingAnchor),
             gradientView.trailingAnchor.constraint(equalTo: superview.trailingAnchor)
         ])
